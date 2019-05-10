@@ -194,6 +194,14 @@ let PDFViewerApplication = {
    * @private
    */
   async _parseHashParameters() {
+    let hash = document.location.hash.substring(1);
+    let hashParams = parseQueryString(hash);
+
+    // Try to get locale from hash
+    if ('locale' in hashParams) {
+      AppOptions.set('locale', hashParams['locale']);
+    }
+
     if (typeof PDFJSDev !== 'undefined' && PDFJSDev.test('PRODUCTION') &&
         !AppOptions.get('pdfBugEnabled')) {
       return;
@@ -201,9 +209,6 @@ let PDFViewerApplication = {
     const waitOn = [];
 
     // Special debugging flags in the hash section of the URL.
-    let hash = document.location.hash.substring(1);
-    let hashParams = parseQueryString(hash);
-
     if ('disableworker' in hashParams &&
         hashParams['disableworker'] === 'true') {
       waitOn.push(loadFakeWorker());
@@ -2010,6 +2015,13 @@ function webViewerPageChanging(evt) {
     if (pageView && pageView.stats) {
       Stats.add(page, pageView.stats);
     }
+  }
+
+  if(window.parent){
+    window.parent.postMessage({
+      type: "pdf-iframe-message-page-number",
+      pageNumber: page
+    },"*");
   }
 }
 
