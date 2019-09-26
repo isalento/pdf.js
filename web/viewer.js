@@ -185,6 +185,16 @@ function getViewerConfiguration() {
 
 function webViewerLoad() {
   let config = getViewerConfiguration();
+  // Hide bookmark, open and download buttons.
+  config.toolbar.viewBookmark.setAttribute('hidden', 'true');
+  config.secondaryToolbar.viewBookmarkButton.setAttribute('hidden', 'true');
+  
+  config.toolbar.openFile.setAttribute('hidden', 'true');
+  config.secondaryToolbar.openFileButton.setAttribute('hidden', 'true');
+
+  config.toolbar.download.setAttribute('hidden', 'true');
+  config.secondaryToolbar.downloadButton.setAttribute('hidden', 'true');
+
   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
     Promise.all([
       SystemJS.import('pdfjs-web/app'),
